@@ -12,6 +12,21 @@ While Marketo provides APIs, there weren't any readily available tools to handle
 - Maintain template metadata and folder structure
 - Handle the process in bulk with proper error handling and progress tracking
 
+## Original Implementation
+
+This tool was originally part of a larger web application. If you're interested in the implementation details or need more context, you can look at the original files:
+
+- [routes/marketo-export.js](sf-connect-app/routes/marketo-export.js) - The core implementation with all API interactions, HTML processing, and export functionality
+- [views/marketo-export.ejs](sf-connect-app/views/marketo-export.ejs) - The web interface that was used to interact with the export functionality
+
+These files show how we originally implemented the export functionality with a web interface, which might be helpful if you're looking to understand:
+- How to interact with Marketo's API
+- How to handle HTML template processing
+- How to manage bulk exports with progress tracking
+- How to structure the export data
+
+The current CLI tool and library were extracted from this implementation to make it more portable and reusable.
+
 ## Features
 
 - Export all email templates from your Marketo instance

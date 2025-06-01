@@ -14,13 +14,13 @@ While Marketo provides APIs, there weren't any readily available tools to handle
 
 ## Features
 
-- 🚀 Export all email templates from your Marketo instance
-- 📄 Save pristine HTML content and metadata for each template
-- 🗂️ Create ZIP archives of exports
-- 📊 Real-time progress indicators and detailed error reporting
-- 📁 Maintains folder structure
-- 🔄 Handles authentication and token refresh automatically
-- 🛠️ Can be used as both a CLI tool and a Node.js library
+- Export all email templates from your Marketo instance
+- Save pristine HTML content and metadata for each template
+- Create ZIP archives of exports
+- Real-time progress indicators and detailed error reporting
+- Maintains folder structure
+- Handles authentication and token refresh automatically
+- Can be used as both a CLI tool and a Node.js library
 
 ## Installation
 

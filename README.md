@@ -14,10 +14,10 @@ While Marketo provides APIs, there weren't any readily available tools to handle
 
 ## Original Implementation
 
-This tool was originally part of a larger web application. If you're interested in the implementation details or need more context, you can look at the original files:
+This tool was originally part of a larger web application. If you're interested in the implementation details or need more context, you can look at the original files in the `original-implementation` directory:
 
-- [routes/marketo-export.js](sf-connect-app/routes/marketo-export.js) - The core implementation with all API interactions, HTML processing, and export functionality
-- [views/marketo-export.ejs](sf-connect-app/views/marketo-export.ejs) - The web interface that was used to interact with the export functionality
+- [original-implementation/routes/marketo-export.js](original-implementation/routes/marketo-export.js) - The core implementation with all API interactions, HTML processing, and export functionality
+- [original-implementation/views/marketo-export.ejs](original-implementation/views/marketo-export.ejs) - The web interface that was used to interact with the export functionality
 
 These files show how we originally implemented the export functionality with a web interface, which might be helpful if you're looking to understand:
 - How to interact with Marketo's API

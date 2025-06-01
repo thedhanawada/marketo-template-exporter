@@ -1,0 +1,719 @@
+<% const title = 'Marketo Export'; %>
+
+<div class="container mt-4">
+    <h1><%= title %></h1>
+    <p class="lead">This page interacts with the Marketo API.</p>
+    <hr>
+
+    <div id="message-area"></div>
+
+    <h3 class="mt-4">Connection Test</h3>
+    <p>I am using this to test the Marketo API and see if the connection works. YAY, it does. .</p>
+
+    <div class="mb-3">
+        <button id="testConnectionBtn" class="btn btn-primary">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plug-fill me-1" viewBox="0 0 16 16">
+                <path d="M6.5 14V.5c0-.276-.224-.5-.5-.5s-.5.224-.5.5V6.83L3.16 4.943l-.706.707L5.293 9.5H.5c-.276 0-.5.224-.5.5s-.224.5.5.5H6.5zm3 0V9.5h6c.276 0 .5-.224.5-.5s-.224-.5-.5-.5H9.707l2.83-3.85 1.2-.9l-.707-.707L10.83 7.17V.5c0-.276-.224-.5-.5-.5s-.5.224-.5.5V14z"/>
+            </svg>
+            Test Marketo Connection
+        </button>
+        <span id="loadingSpinner" class="spinner-border spinner-border-sm text-primary ms-2" role="status" style="display: none;">
+            <span class="visually-hidden">Loading...</span>
+        </span>
+    </div>
+
+    <hr>
+
+    <h3 class="mt-4">Email Templates List</h3>
+    <p>Retrieve a list of all email templates from Marketo.</p>
+
+    <div class="mb-3">
+        <button id="fetchTemplatesBtn" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download me-1" viewBox="0 0 16 16">
+              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+            Fetch All Templates
+        </button>
+         <span id="fetchSpinner" class="spinner-border spinner-border-sm text-secondary ms-2" role="status" style="display: none;">
+            <span class="visually-hidden">Loading...</span>
+        </span>
+    </div>
+
+    <div id="templates-list-area" class="mt-3">
+    </div>
+
+    <hr>
+
+    <h3 class="mt-4">Fetch Single Email by ID</h3>
+    <p>Enter a Marketo Email Template ID to retrieve its details.</p>
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="emailIdInput" placeholder="Enter Email ID (e.g., 4583)" aria-label="Email ID" value="4583">
+        <button class="btn btn-outline-secondary" type="button" id="fetchSingleEmailBtn">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search me-1" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+            Fetch Email
+        </button>
+         <span id="fetchSingleSpinner" class="spinner-border spinner-border-sm text-secondary ms-2" role="status" style="display: none;">
+            <span class="visually-hidden">Loading...</span>
+        </span>
+    </div>
+
+    <div id="single-email-area" class="mt-3">
+    </div>
+
+    <hr>
+
+    <hr>
+<h3 class="mt-4">Bulk Export All Templates</h3>
+<p>Download all templates in a single ZIP archive with folder structure.</p>
+<div class="mb-3">
+    <a href="/marketo-export/bulk-download" class="btn btn-danger">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download-fill me-1" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.5a.5.5 0 0 1 1 0V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0zm-.354 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V11h-1v3.293l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z"/>
+        </svg>
+        Bulk Download All Templates
+    </a>
+    <span class="ms-3 text-danger"><small>Warning: This process may take several minutes!</small></span>
+</div>
+
+<!-- Add near your bulk download button -->
+<a href="/marketo-export/exports" class="btn btn-info ms-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder me-1" viewBox="0 0 16 16">
+        <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"/>
+    </svg>
+    View Exports
+</a>
+
+</div>
+
+<script>
+    function showMessage(text, type = 'info') {
+        const messageArea = document.getElementById('message-area');
+        if (!messageArea) return;
+        messageArea.innerHTML = '';
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+        alertDiv.setAttribute('role', 'alert');
+        alertDiv.innerHTML = `
+            ${text}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        messageArea.appendChild(alertDiv);
+    }
+
+    function escapeHTML(str) {
+        if (typeof str !== 'string') return str;
+        return str.replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/"/g, '&quot;')
+                  .replace(/'/g, '&#39;');
+    }
+
+    function getValue(field, fallback = 'N/A') {
+        if (field === null || field === undefined) return fallback;
+        if (typeof field === 'object' && field !== null && field.hasOwnProperty('value')) {
+            return escapeHTML(field.value) || fallback;
+        }
+        return escapeHTML(String(field)) || fallback;
+    }
+
+    function formatDate(dateString, fallback = 'N/A') {
+         if (!dateString) return fallback;
+         try {
+             const date = new Date(dateString);
+             if (!isNaN(date.getTime())) {
+                 return date.toLocaleString();
+             } else {
+                 console.warn("Invalid date string received:", dateString);
+                 return fallback;
+             }
+         } catch (e) {
+             console.error("Error formatting date:", e, dateString);
+             return fallback;
+         }
+    }
+
+    function downloadHTML(fileName, htmlContent) {
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+
+
+    function displayTemplates(templates, pagination) {
+    const templatesListArea = document.getElementById('templates-list-area');
+    if (!templatesListArea) return;
+    templatesListArea.innerHTML = '';
+
+    if (!templates || templates.length === 0) {
+        templatesListArea.innerHTML = '<div class="alert alert-info" role="alert">No email templates found.</div>';
+        return;
+    }
+
+    // Add pagination info
+    const paginationInfo = document.createElement('div');
+    paginationInfo.className = 'alert alert-info';
+    paginationInfo.innerHTML = `
+        <strong>Showing ${templates.length} templates</strong> (page ${pagination.currentPage} of ${pagination.totalPages},
+        total: ${pagination.totalItems} templates)
+    `;
+    templatesListArea.appendChild(paginationInfo);
+
+    // Create table as before
+    const table = document.createElement('table');
+    table.className = 'table table-striped table-bordered table-hover table-sm';
+
+    // Add thead and tbody as in your original code
+    const thead = document.createElement('thead');
+    thead.className = 'table-secondary';
+    thead.innerHTML = `
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Folder</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    `;
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    templates.forEach(template => {
+        // Your existing row creation code here
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${getValue(template.id)}</td>
+            <td>${getValue(template.name)}</td>
+            <td>${getValue(template.folder && template.folder.value)} (${getValue(template.folder && template.folder.type)})</td>
+            <td>${formatDate(template.createdAt)}</td>
+            <td>${formatDate(template.updatedAt)}</td>
+            <td>${getValue(template.status)}</td>
+            <td>
+                <button class="btn btn-outline-primary btn-sm fetch-template-btn me-1" data-email-id="${getValue(template.id)}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                    </svg>
+                    View
+                </button>
+                <button class="btn btn-outline-danger btn-sm download-template-btn" data-email-id="${getValue(template.id)}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    Download
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+    templatesListArea.appendChild(table);
+
+    // Add bootstrap pagination controls
+    const paginationNav = document.createElement('nav');
+    paginationNav.setAttribute('aria-label', 'Email templates pagination');
+    paginationNav.innerHTML = `
+        <ul class="pagination justify-content-center">
+            <li class="page-item ${pagination.currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="1" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item ${pagination.hasPrevPage ? '' : 'disabled'}">
+                <a class="page-link" href="#" data-page="${pagination.currentPage - 1}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+    `;
+
+    // Add page numbers
+    const startPage = Math.max(1, pagination.currentPage - 2);
+    const endPage = Math.min(pagination.totalPages, pagination.currentPage + 2);
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationNav.querySelector('ul').innerHTML += `
+            <li class="page-item ${i === pagination.currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>
+        `;
+    }
+
+    paginationNav.querySelector('ul').innerHTML += `
+            <li class="page-item ${pagination.hasNextPage ? '' : 'disabled'}">
+                <a class="page-link" href="#" data-page="${pagination.currentPage + 1}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${pagination.totalPages}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    `;
+
+    templatesListArea.appendChild(paginationNav);
+
+    // Add page size selector
+    const pageSizeSelector = document.createElement('div');
+    pageSizeSelector.className = 'mt-3 d-flex justify-content-center';
+    pageSizeSelector.innerHTML = `
+        <div class="input-group" style="width: 250px;">
+            <span class="input-group-text">Templates per page</span>
+            <select id="pageSize" class="form-select">
+                <option value="25" ${pagination.pageSize === 25 ? 'selected' : ''}>25</option>
+                <option value="50" ${pagination.pageSize === 50 ? 'selected' : ''}>50</option>
+                <option value="100" ${pagination.pageSize === 100 ? 'selected' : ''}>100</option>
+                <option value="200" ${pagination.pageSize === 200 ? 'selected' : ''}>200</option>
+            </select>
+        </div>
+    `;
+    templatesListArea.appendChild(pageSizeSelector);
+
+    // Attach event listeners to the pagination links
+    document.querySelectorAll('.pagination .page-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = parseInt(this.getAttribute('data-page'));
+            fetchTemplatesPage(page, pagination.pageSize);
+        });
+    });
+
+    // Attach event listener to page size selector
+    document.getElementById('pageSize').addEventListener('change', function() {
+        const newPageSize = parseInt(this.value);
+        fetchTemplatesPage(1, newPageSize); // Reset to page 1 when changing page size
+    });
+
+    // Attach event listeners to the fetch template buttons
+    const fetchBtns = document.querySelectorAll('.fetch-template-btn');
+    fetchBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const emailId = this.getAttribute('data-email-id');
+            document.getElementById('emailIdInput').value = emailId;
+            document.getElementById('fetchSingleEmailBtn').click();
+        });
+    });
+
+    // Add event listeners for the download buttons
+    const downloadBtns = document.querySelectorAll('.download-template-btn');
+    downloadBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const emailId = this.getAttribute('data-email-id');
+            window.location.href = `/marketo-export/email/${emailId}/download`;
+        });
+    });
+
+    showMessage(`Showing page ${pagination.currentPage} of ${pagination.totalPages} (${pagination.totalItems} total templates)`, 'success');
+}
+
+function fetchTemplatesPage(page, pageSize) {
+    const fetchTemplatesBtn = document.getElementById('fetchTemplatesBtn');
+    const fetchSpinner = document.getElementById('fetchSpinner');
+
+    if (fetchTemplatesBtn) fetchTemplatesBtn.disabled = true;
+    if (fetchSpinner) fetchSpinner.style.display = 'inline-block';
+
+    showMessage('Loading templates...', 'info');
+
+    const templatesListArea = document.getElementById('templates-list-area');
+    if(templatesListArea) templatesListArea.innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+    fetch(`/marketo-export/templates?page=${page}&pageSize=${pageSize}`, { method: 'GET' })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                displayTemplates(result.templates, result.pagination);
+            } else {
+                showMessage(`Failed to fetch templates: ${result.message}`, 'warning');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching Marketo templates:', error);
+            showMessage(`Failed to fetch Marketo templates: ${error.message}`, 'danger');
+        })
+        .finally(() => {
+            if (fetchTemplatesBtn) fetchTemplatesBtn.disabled = false;
+            if (fetchSpinner) fetchSpinner.style.display = 'none';
+        });
+}
+
+
+    function displaySingleEmail(email) {
+        const singleEmailArea = document.getElementById('single-email-area');
+    if (!singleEmailArea) return;
+    singleEmailArea.innerHTML = '';
+
+    if (!email) {
+        singleEmailArea.innerHTML = '<div class="alert alert-warning" role="alert">Email not found or details unavailable.</div>';
+        return;
+    }
+
+    const cardHtml = `
+        <div class="card">
+            <div class="card-header">Email Details (ID: ${getValue(email.id)})</div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Name:</dt>
+                    <dd class="col-sm-9">${getValue(email.name)}</dd>
+
+                    <dt class="col-sm-3">Status:</dt>
+                    <dd class="col-sm-9">${getValue(email.status)}</dd>
+
+                    <dt class="col-sm-3">Folder:</dt>
+                    <dd class="col-sm-9">${getValue(email.folder && email.folder.value)} (${getValue(email.folder && email.folder.type)})</dd>
+
+                    <dt class="col-sm-3">Folder Path:</dt>
+                    <dd class="col-sm-9">${getValue(email.folderPathString)}</dd>
+
+                    <dt class="col-sm-3">Created At:</dt>
+                    <dd class="col-sm-9">${formatDate(email.createdAt)}</dd>
+
+                    <dt class="col-sm-3">Updated At:</dt>
+                    <dd class="col-sm-9">${formatDate(email.updatedAt)}</dd>
+
+                    <dt class="col-sm-3">Subject:</dt>
+                    <dd class="col-sm-9">${getValue(email.subject)}</dd>
+
+                    <dt class="col-sm-3">From Name:</dt>
+                    <dd class="col-sm-9">${getValue(email.fromName)}</dd>
+
+                    <dt class="col-sm-3">From Email:</dt>
+                    <dd class="col-sm-9">${getValue(email.fromEmail)}</dd>
+                </dl>
+                 <div id="button-area" class="mt-3">
+                     <span id="fetchHtmlSpinner" class="spinner-border spinner-border-sm text-info ms-2" role="status" style="display: none;">
+                         <span class="visually-hidden">Loading...</span>
+                     </span>
+                     <span id="downloadHtmlSpinner" class="spinner-border spinner-border-sm text-danger ms-2" role="status" style="display: none;">
+                         <span class="visually-hidden">Loading...</span>
+                     </span>
+                     <span id="viewEmailSpinner" class="spinner-border spinner-border-sm text-success ms-2" role="status" style="display: none;">
+                         <span class="visually-hidden">Loading...</span>
+                     </span>
+                 </div>
+                 <div id="html-content-area" class="mt-3" style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background-color: #f8f9fa; white-space: pre-wrap; word-break: break-word; display: none;">
+                 </div>
+                 <div id="preview-area" class="mt-3" style="display: none;">
+                     <div class="border p-3 bg-light">
+                         <iframe id="email-preview-iframe" style="width: 100%; height: 600px; border: 1px solid #ddd;"></iframe>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    `;
+    singleEmailArea.innerHTML = cardHtml;
+
+        const buttonArea = singleEmailArea.querySelector('#button-area');
+
+        const viewEmailBtn = document.createElement('button');
+        viewEmailBtn.id = 'viewEmailBtn';
+        viewEmailBtn.className = 'btn btn-outline-success btn-sm me-2';
+        viewEmailBtn.setAttribute('data-email-id', email.id);
+        viewEmailBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye me-1" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg> Preview Email';
+        buttonArea.appendChild(viewEmailBtn);
+
+        const fetchHtmlBtn = document.createElement('button');
+        fetchHtmlBtn.id = 'fetchHtmlBtn';
+        fetchHtmlBtn.className = 'btn btn-outline-info btn-sm me-2';
+        fetchHtmlBtn.setAttribute('data-email-id', email.id);
+        fetchHtmlBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-html me-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h8.5L14 4.5ZM11.5 5A.5.5 0 0 1 12 5.5v2a.5.5 0 0 1-.757.429L9.49 7.31l-1.189 1.687a.5.5 0 0 1-.832-.047L6.354 5.83a.5.5 0 0 1 .747-.429l1.713.956 1.189-1.687a.5.5 0 0 1 .832.047L11.5 4.5ZM2 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H2Z"/></svg> View HTML Code';
+        buttonArea.appendChild(fetchHtmlBtn);
+
+        const openTabBtn = document.createElement('button');
+        openTabBtn.id = 'openTabBtn';
+        openTabBtn.className = 'btn btn-outline-primary btn-sm me-2';
+        openTabBtn.setAttribute('data-email-id', email.id);
+        openTabBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right me-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg> Open in New Tab';
+        buttonArea.appendChild(openTabBtn);
+
+        const downloadHtmlBtn = document.createElement('button');
+        downloadHtmlBtn.id = 'downloadHtmlBtn';
+        downloadHtmlBtn.className = 'btn btn-outline-danger btn-sm me-2';
+        downloadHtmlBtn.setAttribute('data-email-id', email.id);
+        downloadHtmlBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code me-1" viewBox="0 0 16 16"><path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/><path d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708zm-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z"/></svg> Download HTML';
+        buttonArea.appendChild(downloadHtmlBtn);
+
+        const downloadRawHtmlBtn = document.createElement('button');
+        downloadRawHtmlBtn.id = 'downloadRawHtmlBtn';
+        downloadRawHtmlBtn.className = 'btn btn-outline-secondary btn-sm';
+        downloadRawHtmlBtn.setAttribute('data-email-id', email.id);
+        downloadRawHtmlBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code-fill me-1" viewBox="0 0 16 16"><path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM6.646 7.646a.5.5 0 1 1 .708.708L5.707 10l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zm2.708 0 2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 1 1-.708-.708L10.293 10 8.646 8.354a.5.5 0 1 1 .708-.708z"/></svg> Download Raw HTML';
+        buttonArea.appendChild(downloadRawHtmlBtn);
+
+        const fetchHtmlSpinner = singleEmailArea.querySelector('#fetchHtmlSpinner');
+        const downloadHtmlSpinner = singleEmailArea.querySelector('#downloadHtmlSpinner');
+        const viewEmailSpinner = singleEmailArea.querySelector('#viewEmailSpinner');
+        const htmlContentArea = singleEmailArea.querySelector('#html-content-area');
+        const previewArea = singleEmailArea.querySelector('#preview-area');
+        const emailPreviewIframe = singleEmailArea.querySelector('#email-preview-iframe');
+
+        showMessage(`Successfully fetched details for Email ID ${getValue(email.id)}.`, 'success');
+
+        if (viewEmailBtn && previewArea) {
+            viewEmailBtn.addEventListener('click', async () => {
+                const emailId = viewEmailBtn.dataset.emailId;
+
+                viewEmailBtn.disabled = true;
+                if(viewEmailSpinner) viewEmailSpinner.style.display = 'inline-block';
+
+                if(htmlContentArea) htmlContentArea.style.display = 'none';
+
+                previewArea.style.display = 'block';
+
+                try {
+                    const response = await fetch(`/marketo-export/email/${encodeURIComponent(emailId)}/preview`);
+
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                    }
+
+                    const htmlContent = await response.text();
+
+                    const iframe = emailPreviewIframe;
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(htmlContent);
+                    iframeDoc.close();
+
+                    setTimeout(() => {
+                        try {
+                            const height = iframe.contentWindow.document.body.scrollHeight;
+                            iframe.style.height = (height + 30) + 'px';
+                        } catch (e) {
+                            console.error("Error resizing iframe:", e);
+                        }
+                    }, 500);
+
+                    showMessage(`Email preview loaded successfully.`, 'success');
+                } catch (error) {
+                    console.error('Error fetching email preview:', error);
+                    previewArea.style.display = 'none';
+                    showMessage(`Failed to load email preview: ${error.message}`, 'danger');
+                } finally {
+                    viewEmailBtn.disabled = false;
+                    if(viewEmailSpinner) viewEmailSpinner.style.display = 'none';
+                }
+            });
+        }
+
+        if (openTabBtn) {
+            openTabBtn.addEventListener('click', () => {
+                const emailId = openTabBtn.dataset.emailId;
+                window.open(`/marketo-export/email/${emailId}/view`, '_blank');
+            });
+        }
+
+        if (fetchHtmlBtn && htmlContentArea) {
+            fetchHtmlBtn.addEventListener('click', async () => {
+                const emailId = fetchHtmlBtn.dataset.emailId;
+
+                fetchHtmlBtn.disabled = true;
+                if(fetchHtmlSpinner) fetchHtmlSpinner.style.display = 'inline-block';
+
+                if(previewArea) previewArea.style.display = 'none';
+
+                htmlContentArea.style.display = 'block';
+                htmlContentArea.textContent = 'Loading HTML...';
+
+                try {
+                    const response = await fetch(`/marketo-export/email/${encodeURIComponent(emailId)}/content`, { method: 'GET' });
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                        let errorMessage = `Server error: ${response.status} ${response.statusText}`;
+                        try { const errorJson = JSON.parse(errorBody); if(errorJson.message) errorMessage = errorJson.message; } catch(e) { if(errorBody) errorMessage = `Server error: ${response.status} ${response.statusText} - ${errorBody.substring(0, Math.min(errorBody.length, 200))}...`; }
+                        throw new Error(errorMessage);
+                    }
+
+                    if (result.success && result.htmlContent) {
+                        htmlContentArea.textContent = result.htmlContent;
+                        htmlContentArea.style.whiteSpace = 'pre-wrap';
+                    } else if (result.success && !result.htmlContent) {
+                        htmlContentArea.textContent = 'No HTML content found for this email.';
+                        showMessage(`No HTML content found for Email ID ${emailId}.`, 'warning');
+                    }
+                    else {
+                        htmlContentArea.textContent = `Failed to fetch HTML content: ${result.message}`;
+                        showMessage(`Failed to fetch HTML content: ${result.message}`, 'warning');
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching HTML content:', error);
+                    htmlContentArea.textContent = `Error: ${error.message}`;
+                    showMessage(`Failed to fetch HTML content: ${error.message}`, 'danger');
+                } finally {
+                    fetchHtmlBtn.disabled = false;
+                    if(fetchHtmlSpinner) fetchHtmlSpinner.style.display = 'none';
+                }
+            });
+        }
+
+        if (downloadHtmlBtn) {
+            downloadHtmlBtn.addEventListener('click', async () => {
+                const emailId = downloadHtmlBtn.dataset.emailId;
+
+                downloadHtmlBtn.disabled = true;
+                if(downloadHtmlSpinner) downloadHtmlSpinner.style.display = 'inline-block';
+                showMessage(`Fetching HTML for Email ID ${emailId}...`, 'info');
+
+                try {
+                    window.location.href = `/marketo-export/email/${emailId}/download`;
+                    showMessage(`HTML download initiated for Email ID ${emailId}.`, 'success');
+                } catch (error) {
+                    console.error('Error downloading HTML:', error);
+                    showMessage(`Failed to download HTML: ${error.message}`, 'danger');
+                } finally {
+                    downloadHtmlBtn.disabled = false;
+                    if(downloadHtmlSpinner) downloadHtmlSpinner.style.display = 'none';
+                }
+            });
+        }
+
+        if (downloadRawHtmlBtn) {
+            downloadRawHtmlBtn.addEventListener('click', function() {
+                const emailId = this.getAttribute('data-email-id');
+                window.location.href = `/marketo-export/email/${emailId}/download`;
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const testConnectionBtn = document.getElementById('testConnectionBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const fetchTemplatesBtn = document.getElementById('fetchTemplatesBtn');
+        const fetchSpinner = document.getElementById('fetchSpinner');
+        const emailIdInput = document.getElementById('emailIdInput');
+        const fetchSingleEmailBtn = document.getElementById('fetchSingleEmailBtn');
+        const fetchSingleSpinner = document.getElementById('fetchSingleSpinner');
+
+        if (testConnectionBtn) {
+            testConnectionBtn.addEventListener('click', async () => {
+                testConnectionBtn.disabled = true;
+                if (loadingSpinner) loadingSpinner.style.display = 'inline-block';
+                showMessage('');
+
+                try {
+                    const response = await fetch('/marketo-export/test-connection', { method: 'POST' });
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.message || `Server error: ${response.status} ${response.statusText}`);
+                    }
+                    showMessage(`Marketo Connection Successful: ${result.message}`, 'success');
+
+                } catch (error) {
+                    console.error('Error testing Marketo connection:', error);
+                    showMessage(`Failed to test Marketo connection: ${error.message}`, 'danger');
+                } finally {
+                    testConnectionBtn.disabled = false;
+                    if (loadingSpinner) loadingSpinner.style.display = 'none';
+                }
+            });
+        }
+
+        if (fetchTemplatesBtn) {
+            fetchTemplatesBtn.addEventListener('click', async () => {
+                        // Default to page 1 with 50 items per page on initial load
+        fetchTemplatesPage(1, 50);
+
+                fetchTemplatesBtn.disabled = true;
+                if (fetchSpinner) fetchSpinner.style.display = 'inline-block';
+                showMessage('');
+                const templatesListArea = document.getElementById('templates-list-area');
+                if(templatesListArea) templatesListArea.innerHTML = '';
+                const singleEmailArea = document.getElementById('single-email-area');
+                if(singleEmailArea) singleEmailArea.innerHTML = '';
+
+                try {
+                    const response = await fetch('/marketo-export/templates', { method: 'GET' });
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.message || `Server error: ${response.status} ${response.statusText}`);
+                    }
+
+                    if (result.success) {
+                        displayTemplates(result.templates);
+                    } else {
+                        showMessage(`Failed to fetch templates (Server Reported): ${result.message}`, 'warning');
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching Marketo templates:', error);
+                    showMessage(`Failed to fetch Marketo templates: ${error.message}`, 'danger');
+
+                } finally {
+                    fetchTemplatesBtn.disabled = false;
+                    if (fetchSpinner) fetchSpinner.style.display = 'none';
+                }
+            });
+        }
+
+        if (fetchSingleEmailBtn && emailIdInput) {
+            fetchSingleEmailBtn.addEventListener('click', async () => {
+                const emailId = emailIdInput.value.trim();
+
+                if (!emailId) {
+                    showMessage('Please enter an Email ID.', 'warning');
+                    return;
+                }
+
+                if (isNaN(emailId) || parseInt(emailId, 10).toString() !== emailId.toString()) {
+                    showMessage('Please enter a valid numeric Email ID.', 'warning');
+                    return;
+                }
+
+                fetchSingleEmailBtn.disabled = true;
+                if (fetchSingleSpinner) fetchSingleSpinner.style.display = 'inline-block';
+                showMessage('');
+                const singleEmailArea = document.getElementById('single-email-area');
+                if(singleEmailArea) singleEmailArea.innerHTML = '';
+                const templatesListArea = document.getElementById('templates-list-area');
+                if(templatesListArea) templatesListArea.innerHTML = '';
+
+                try {
+                    const response = await fetch(`/marketo-export/email/${encodeURIComponent(emailId)}`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.message || `Server error: ${response.status} ${response.statusText}`);
+                    }
+
+                    if (result.success) {
+                        displaySingleEmail(result.email);
+                    } else {
+                        showMessage(`Failed to fetch email (Server Reported): ${result.message}`, 'warning');
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching single Marketo email:', error);
+                    showMessage(`Failed to fetch single Marketo email: ${error.message}`, 'danger');
+
+                } finally {
+                    fetchSingleEmailBtn.disabled = false;
+                    if (fetchSingleSpinner) fetchSingleSpinner.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>

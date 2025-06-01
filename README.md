@@ -24,14 +24,16 @@ While Marketo provides APIs, there weren't any readily available tools to handle
 
 ## Installation
 
+Clone the repository:
 ```bash
-npm install -g marketo-template-exporter
+git clone https://github.com/thedhanawada/marketo-template-exporter.git
+cd marketo-template-exporter
+npm install
 ```
 
-Or install locally in your project:
-
+To use the CLI tool globally on your machine:
 ```bash
-npm install marketo-template-exporter
+npm link
 ```
 
 ## Configuration
@@ -72,7 +74,7 @@ marketo-export --help
 ### Programmatic Usage
 
 ```javascript
-const MarketoClient = require('marketo-template-exporter');
+const MarketoClient = require('./lib/marketo-client');
 
 // Initialize the client
 const client = new MarketoClient({

@@ -4,9 +4,9 @@ A command-line tool and library to export Marketo email templates with their HTM
 
 ## Background
 
-This tool was born out of necessity during our organization's migration away from Marketo to a new marketing automation platform. We faced a significant challenge: how to efficiently export hundreds of email templates from Marketo while preserving their HTML content and structure.
+I created this tool during our organization's migration away from Marketo to a new marketing automation platform. The challenge was clear: how to efficiently export hundreds of email templates from Marketo while preserving their HTML content and structure.
 
-While Marketo provides APIs, there weren't any readily available tools to handle bulk template exports with proper HTML formatting. This tool was created to fill that gap, making it easier for teams to:
+While Marketo provides APIs, there weren't any readily available tools to handle bulk template exports with proper HTML formatting. I developed this tool to fill that gap, making it easier to:
 - Export all email templates programmatically
 - Preserve HTML content exactly as it appears in Marketo
 - Maintain template metadata and folder structure
@@ -19,13 +19,13 @@ This tool was originally part of a larger web application. If you're interested 
 - [original-implementation/routes/marketo-export.js](original-implementation/routes/marketo-export.js) - The core implementation with all API interactions, HTML processing, and export functionality
 - [original-implementation/views/marketo-export.ejs](original-implementation/views/marketo-export.ejs) - The web interface that was used to interact with the export functionality
 
-These files show how we originally implemented the export functionality with a web interface, which might be helpful if you're looking to understand:
+These files show how I originally implemented the export functionality with a web interface, which might be helpful if you're looking to understand:
 - How to interact with Marketo's API
 - How to handle HTML template processing
 - How to manage bulk exports with progress tracking
 - How to structure the export data
 
-The current CLI tool and library were extracted from this implementation to make it more portable and reusable.
+I later extracted the functionality into this CLI tool and library to make it more portable and reusable.
 
 ## Features
 

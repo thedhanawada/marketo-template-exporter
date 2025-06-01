@@ -127,20 +127,6 @@ The tool includes robust error handling:
    - For very large template sets, use the streaming export options
    - Monitor memory usage during bulk exports
 
-## Contributing
+## Archive Notice
 
-Contributions are welcome! Please feel free to submit a Pull Request. Here's how you can help:
-
-- Report bugs
-- Suggest new features
-- Improve documentation
-- Add test cases
-- Enhance error handling
-
-## License
-
-MIT
-
-## Author
-
-Created by the MTC team during our platform migration project. We hope it helps others facing similar challenges! 
+This project is now archived as our Marketo migration is complete. The code is provided as-is and is no longer actively maintained. If you have questions about using this tool, feel free to reach out to me through GitHub issues. 
